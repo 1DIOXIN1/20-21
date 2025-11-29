@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class DragHandler
+public class DragPicker
 {
     private Camera _camera;
 
-    public DragHandler(Camera camera)
+    public DragPicker(Camera camera)
     {
         _camera = camera;
     }

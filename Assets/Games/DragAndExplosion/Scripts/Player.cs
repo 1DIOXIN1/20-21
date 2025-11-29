@@ -4,7 +4,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float _radiusExplosion;
     [SerializeField] private float _forceExplosion;
-    [SerializeField] private DragHandler _dragHandler;
+    private DragPicker _dragHandler;
 
     private const KeyCode SHOOT_KEYCODE_NAME = KeyCode.Mouse1;
     private const KeyCode DRAG_KEYCODE_NAME = KeyCode.Mouse0;
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     private void Awake() 
     {
         _shooter = new ExplosionShooter(_radiusExplosion, _forceExplosion, Camera.main);
-        _dragHandler = new DragHandler(Camera.main);
+        _dragHandler = new DragPicker(Camera.main);
     }
 
     private void Update()
