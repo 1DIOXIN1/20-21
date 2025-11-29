@@ -12,6 +12,7 @@ public class DragAndDropObject : MonoBehaviour, IDragable, IExplosionable
     private void Awake() 
     {
         _camera = Camera.main;
+        
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -20,6 +21,7 @@ public class DragAndDropObject : MonoBehaviour, IDragable, IExplosionable
         if (_isDragging) return;
 
         Vector3 direction = (transform.position - initiator).normalized * force;
+
         _rigidbody.AddForce(direction, ForceMode.Impulse);
     }
 
@@ -28,14 +30,12 @@ public class DragAndDropObject : MonoBehaviour, IDragable, IExplosionable
         _isDragging = true;
         _rigidbody.isKinematic = true;
         
-        // Вычисляем расстояние от камеры до объекта для правильного преобразования координат
         Vector3 objectScreenPoint = _camera.WorldToScreenPoint(transform.position);
+
         _dragPlaneDistance = objectScreenPoint.z;
 
-        Debug.Log(objectScreenPoint);
-        
-        // Вычисляем смещение между объектом и курсором
         Vector3 mouseWorldPos = GetMouseWorldPosition(mousePosition);
+
         _dragOffset = transform.position - mouseWorldPos;
     }
 
@@ -45,6 +45,7 @@ public class DragAndDropObject : MonoBehaviour, IDragable, IExplosionable
             OnDragStart(mousePosition);
 
         Vector3 worldPosition = GetMouseWorldPosition(mousePosition) + _dragOffset;
+
         transform.position = worldPosition;
     }
 
@@ -57,6 +58,7 @@ public class DragAndDropObject : MonoBehaviour, IDragable, IExplosionable
     private Vector3 GetMouseWorldPosition(Vector3 mousePosition)
     {
         mousePosition.z = _dragPlaneDistance;
+
         return _camera.ScreenToWorldPoint(mousePosition);
     }
 }

@@ -7,6 +7,7 @@ public class CameraModeSwitcher : MonoBehaviour
     [SerializeField] private List<CinemachineVirtualCamera> _cameras;
 
     private const KeyCode SWITCH_NAME_KEYCODE = KeyCode.F;
+    
     private Queue<CinemachineVirtualCamera> _camerasQueue;
 
     private void Awake() 
@@ -25,9 +26,7 @@ public class CameraModeSwitcher : MonoBehaviour
         CinemachineVirtualCamera nextMode = _camerasQueue.Dequeue();
 
         foreach (CinemachineVirtualCamera camera in _cameras)
-        {
             camera.gameObject.SetActive(false);
-        }
 
         nextMode.gameObject.SetActive(true);
 
