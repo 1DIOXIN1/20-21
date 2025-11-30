@@ -1,9 +1,8 @@
 using UnityEngine;
 
+[RequireComponent(typeof(ExplosionShooter), typeof(DragPicker))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _radiusExplosion;
-    [SerializeField] private float _forceExplosion;
     private DragPicker _dragHandler;
 
     private const KeyCode SHOOT_KEYCODE_NAME = KeyCode.Mouse1;
@@ -14,8 +13,8 @@ public class Player : MonoBehaviour
 
     private void Awake() 
     {
-        _shooter = new ExplosionShooter(_radiusExplosion, _forceExplosion, Camera.main);
-        _dragHandler = new DragPicker(Camera.main);
+        _shooter = GetComponent<ExplosionShooter>();
+        _dragHandler = GetComponent<DragPicker>();
     }
 
     private void Update()

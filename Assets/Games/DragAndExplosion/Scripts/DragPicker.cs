@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class DragPicker
+public class DragPicker : MonoBehaviour
 {
     private Camera _camera;
 
-    public DragPicker(Camera camera)
+    private void Awake()
     {
-        _camera = camera;
+        _camera = Camera.main;
     }
 
     public IDragable TryDragObject(Vector3 mousePosition)

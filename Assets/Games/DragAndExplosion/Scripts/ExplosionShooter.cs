@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class ExplosionShooter
+public class ExplosionShooter : MonoBehaviour
 {
-    private float _radius;
-    private float _forceExplosion;
+    [SerializeField] private float _radius = 3f;
+    [SerializeField] private float _forceExplosion = 10;
+    [SerializeField] private ParticleSystem _particlePrefab;
 
     private Camera _camera;
 
@@ -12,6 +13,11 @@ public class ExplosionShooter
         _radius = radius;
         _forceExplosion = forceExplosion;
         _camera = camera;
+    }
+
+    private void Awake() 
+    {
+        _camera = Camera.main;
     }
 
     public void Shoot()
@@ -27,8 +33,18 @@ public class ExplosionShooter
                 IExplosionable interactable = collider.GetComponent<IExplosionable>();
 
                 if(interactable != null)
+                {
                     interactable.Explosion(_hitInfo.point, _forceExplosion);
+
+                    PlayParticle(_hitInfo.point);
+                }      
             }
         }
+    }
+
+    private void PlayParticle(Vector3 position)
+    {
+        _particlePrefab.transform.position = position;
+        _particlePrefab.Play();
     }
 }
