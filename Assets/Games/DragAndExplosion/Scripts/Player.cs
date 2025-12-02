@@ -1,20 +1,23 @@
 using UnityEngine;
 
-[RequireComponent(typeof(ExplosionShooter), typeof(DragPicker))]
 public class Player : MonoBehaviour
 {
-    private DragPicker _dragHandler;
+    [SerializeField] private float _radiusExplosion = 3f;
+    [SerializeField] private float _forceExplosion = 10;
+    [SerializeField] private ParticleSystem _explosionParticle;
 
-    private const KeyCode SHOOT_KEYCODE_NAME = KeyCode.Mouse1;
-    private const KeyCode DRAG_KEYCODE_NAME = KeyCode.Mouse0;
-
+    private DragPicker _dragPicker;
     private ExplosionShooter _shooter;
-    private IDragable _currentDragable;
+    private Camera _camera;
+    
+    private const KeyCode SHOOT_KEYCODE = KeyCode.Mouse1;
+    private const KeyCode DRAG_KEYCODE = KeyCode.Mouse0;
 
     private void Awake() 
     {
-        _shooter = GetComponent<ExplosionShooter>();
-        _dragHandler = GetComponent<DragPicker>();
+        _camera = Camera.main;
+        _shooter = new ExplosionShooter(_radiusExplosion, _forceExplosion, _camera, _explosionParticle);
+        _dragPicker = new DragPicker(_camera);
     }
 
     private void Update()
@@ -25,31 +28,24 @@ public class Player : MonoBehaviour
 
     private void HandleShooting()
     {
-        if (Input.GetKeyDown(SHOOT_KEYCODE_NAME))
-            _shooter.Shoot();
+        if (Input.GetKeyDown(SHOOT_KEYCODE))
+        {
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            _shooter.Shoot(ray);
+        }
     }
 
     private void HandleDragging()
     {
-        if (Input.GetKeyDown(DRAG_KEYCODE_NAME))
-        {
-            _currentDragable = _dragHandler.TryDragObject(Input.mousePosition);
-
-            if (_currentDragable != null)
-            {
-                _currentDragable.OnDragStart(Input.mousePosition);
-            }
-        }
-
-        if (Input.GetKey(DRAG_KEYCODE_NAME) && _currentDragable != null)
-        {
-            _currentDragable.OnDrag(Input.mousePosition);
-        }
-
-        if (Input.GetKeyUp(DRAG_KEYCODE_NAME) && _currentDragable != null)
-        {
-            _currentDragable.OnDragEnd();
-            _currentDragable = null;
-        }
+        Vector2 mousePosition = Input.mousePosition;
+        
+        if (Input.GetKeyDown(DRAG_KEYCODE))
+            _dragPicker.StartDragging(mousePosition);
+        
+        if (Input.GetKey(DRAG_KEYCODE))
+            _dragPicker.UpdateDragging(mousePosition);
+        
+        if (Input.GetKeyUp(DRAG_KEYCODE))
+            _dragPicker.StopDragging();
     }
 }
